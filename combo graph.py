@@ -1,17 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import groupby, count
-
 from matplotlib import ticker
 
+# plots the graph for the minimum distances between any 2 peptides in the system at each timestep
+# output for 3 peptide system was three lines representing min dist of all 3C2 combinations
 peptide_a = 1
 peptide_b = 2
 peptide_c = 3
 
 x, y, a, b, c, d = [], [], [], [], [], []
 
+# define ouor threshold below which bonding takes place'
 thresh = 8
 
+# open all of the minimum dists found from simulation for each peptide pair in system
 with open("real_min_p1_p2_ni01.txt") as f:
     for line in f:
         cols = line.split()
@@ -35,17 +38,31 @@ with open("real_min_p2_p3_ni01.txt") as f:
         if len(cols) == 2:
             c.append(float(cols[0]))
             d.append(float(cols[1]))
+
+# normalising the units => making distance to nanometres
+# x,y is p1-p2, a,b is p1-p3 and c,d is p2-p3
 l = [i * 0.001 for i in x]
 j = [round(i) for i in l]
 h = []
+
+# create the tuple for our nm dists and time steps
 lst = zip(j,y)
 print(l)
+
+# post inspecting graph can find points where between a 2 different times the distance was below the threshold for binding
+# this period subsequently analysed
+lower_bound = 520
+upper_bound = 540
 for item in lst:
-    if 520 < float(item[0]) < 540:
+    if lower_bound < float(item[0]) < upper_bound:
         h.append(float(item[1]))
+
+# find the average, minimum and maximum distance across the defined binding time
 print(sum(h)/len(h))
 print(min(h))
 print(max(h))
+
+# plot the graph with 3C2 lines of minimum dists between peptide pairs
 def graph():
     plt.style.use('seaborn-whitegrid')
     fig = plt.figure()
