@@ -3,7 +3,7 @@ from matplotlib import ticker
 
 x, b = [], []
 
-# no_hbonds_n2n3new.xvg
+# finds the number of hydrogen bonds across binding interface of the peptides
 with open("no_hbonds_n2n3new.xvg") as f:
     for line in f:
         cols = line.split()
@@ -11,14 +11,19 @@ with open("no_hbonds_n2n3new.xvg") as f:
         if len(cols) == 3:
             x.append(float(cols[0]))
             b.append(float(cols[1]))
+            
+# normalises values to 0 minimum
 y = [i-3 for i in b]
 print(sum(b)/len(b))
 n = []
 for i in b:
     if i > 0:
         n.append(i)
+finding average across simulation
 print(sum(n)/len(n))
+# normalising to nanometres
 l = [i * 0.001 for i in x]
+# plots h bonds for each time step across simulation
 plt.style.use('seaborn-whitegrid')
 fig = plt.gcf()
 ax1 = fig.add_subplot(111)
