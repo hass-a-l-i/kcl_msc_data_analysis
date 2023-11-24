@@ -1,5 +1,6 @@
 from PyPDF2 import PdfFileMerger
 
+# merging pdf output files of graphs to make figures for write up
 pdfs = ['P1-P2 trimer thresh=10A.pdf', 'P1-P3 trimer thresh=10A.pdf', 'P2-P3 trimer thresh=10A.pdf']
 
 merger = PdfFileMerger()
