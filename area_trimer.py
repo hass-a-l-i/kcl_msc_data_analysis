@@ -3,6 +3,7 @@ from matplotlib import ticker
 
 x, y = [], []
 
+# finds the change in area of the peptides in the system as a whole to identify possible bonding times
 with open("area_trimer.xvg") as f:
     for line in f:
         cols = line.split()
