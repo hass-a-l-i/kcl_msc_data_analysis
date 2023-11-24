@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
+# splits the graph of 3 lines of peptide pair min dists into 3 seperate graphs - alternative figure
 gs = gridspec.GridSpec(2, 4)
 gs.update(wspace=0.5)
 
