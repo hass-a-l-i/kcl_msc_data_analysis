@@ -8,6 +8,8 @@ peptide_b = 3
 
 x, y = [], []
 
+# using the (minimum distance, timestep) tuple list
+# found min distance using algorithm in gramacs repos
 with open("new_min_1_2_trimer.txt") as f:
     for line in f:
         cols = line.split()
@@ -15,18 +17,22 @@ with open("new_min_1_2_trimer.txt") as f:
         if len(cols) == 2:
             x.append(float(cols[0]))
             y.append(float(cols[1]))
-
+# tuple list of floats
 both = zip(x, y)
 
+# define threshold binding distance
 thresh = 7
 
 time_step = x[1] - x[0]
 
+# define a time period for peptides to be classed as bound
 percent_binding_thresh = 0.1
 
+# number of frames in simulation
 Frames = len(y)
 
-
+# function for information to output from simulation data
+# min dist, max dist, dist at start and end, frames and time frame number
 def important_info():
     Min = min(y)
     Max = max(y)
@@ -43,7 +49,12 @@ def important_info():
     Time = max(x) - min(x)
     print("Timeframe =", Time, "ps")
 
-
+# function to define peptides as being bound
+# find dists less than thresh
+# find differences between these times for these distances
+# isolate time bound for over 100 ns
+# find number of frames actualy bound
+# finally find % of simulation classed as bound
 def time_bounded():
     print("BOUND = being within", thresh, "Angstroms of each other")
 
@@ -75,6 +86,7 @@ def time_bounded():
 
     print("peptides classed as bound if they STAY bound for at least", round(percent_binding_thresh * 100),
           "% of total frames, or ", x[-1] * percent_binding_thresh, "ps")
+    
     if percent_of_frames_bound > percent_binding_thresh:
         print("P", peptide_a, "and", "P", peptide_b, "WERE BOUND")
     else:
@@ -83,7 +95,7 @@ def time_bounded():
     print("TIME BOUND =", Frames_bound * time_step, "from total of", x[-1], "ps")
     print("percent of frames bound =", percent_of_frames_bound * 100, "%")
 
-
+# plotting function for graph
 def graph():
     plt.style.use('seaborn-whitegrid')
     fig = plt.figure()
@@ -104,22 +116,15 @@ def graph():
     # ax1.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     for axis in [ax1.yaxis]:
         axis.set_major_locator(ticker.MaxNLocator(prune='lower', integer=True))
-    #plt.xlim(l[0], l[-1])
-    #plt.ylim(0, 54)
-    #fig.savefig("SA-I--P{a}-P{b} trimer thresh={c}A.pdf".format(a=peptide_a, b=peptide_b, c=thresh), bbox_inches='tight')
+    # plt.xlim(l[0], l[-1])
+    # plt.ylim(0, 54)
+    # fig.savefig("SA-I--P{a}-P{b} trimer thresh={c}A.pdf".format(a=peptide_a, b=peptide_b, c=thresh), bbox_inches='tight')
     plt.show()
 
 
 
-#important_info()
-#time_bounded()
-#graph()
+important_info()
+time_bounded()
+graph()
 
-j = list(range(5200, 5402))
-o = [i * 100 for i in j]
-v = list(range(0, 10001))
-r = [i * 100 for i in v]
-d = [i for i in r if i not in o]
-print(d)
-print(x[1240], x[1280])
 input('Press ENTER to exit')
