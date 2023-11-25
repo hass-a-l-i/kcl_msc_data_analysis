@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+# average number of contacts as a heatmap showing which residues have the highest number of contacts
 x, y, z = [], [], []
 
 with open("no_contacts.txt") as f:
@@ -19,9 +20,8 @@ print(z)
 c = [float(i)/max(z) for i in z]
 print("max frac frame bound =", max(z))
 data = pd.DataFrame(data={'N2 hydrophobic residues': x, 'N3 hydrophobic residues': y, '# contacts': z})
-# data = pd.DataFrame(data={'P2 hydrophobic residues': x, 'P3 hydrophobic residues': y, 'Fraction of frames bound': c})
 data = data.pivot(index='N2 hydrophobic residues', columns='N3 hydrophobic residues', values='# contacts')
-# print(data)
+print(data)
 sns.set(font_scale=1)
 svm = sns.heatmap(data, cmap='coolwarm', annot=True, annot_kws={"fontsize":10}, vmax=0, vmin=2, cbar_kws={'label': 'Average number of contacts', 'ticks': [0, 1, 2]})
 svm.invert_yaxis()
