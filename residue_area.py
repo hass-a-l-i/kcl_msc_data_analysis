@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 
+# used to find the average solvent exposed surface area of each residue within the trimer system
+# used to identify buried residues to elucidate the structure of NI01 in solution
 x, y, z = [], [], []
 
+# output residue area from gromacs
 with open("resarea.xvg") as f:
     for line in f:
         cols = line.split()
@@ -11,6 +14,8 @@ with open("resarea.xvg") as f:
             x.append(float(cols[0]))
             y.append(float(cols[1]))
             z.append(float(cols[2]))
+
+# 48 residues in each peptide 
 thresh = .5
 p1_x = x[0:48]
 p1_y = y[0:48]
@@ -21,14 +26,18 @@ p2_z = z[48:96]
 p3_x = x[96:144]
 p3_y = y[96:144]
 p3_z = z[96:144]
+
+# focused on area and corresponding timesteps of each residue in each peptide in trimer system
 p1 = zip(p1_x, p1_y)
 p2 = zip(p2_x, p2_y)
 p3 = zip(p3_x, p3_y)
 
+# flag low area residues
 for item in p3:
     if item[1] < thresh and item[1] > 0.1:
         print(item)
 
+# plot a line graph with 3 lines of all 3 peptides and corresponding residues 
 fig = plt.figure()
 plt.style.use('seaborn-whitegrid')
 ax1 = fig.add_subplot(111)
