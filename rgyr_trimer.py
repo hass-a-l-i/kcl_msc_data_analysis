@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 
+# find the radius of gyration of each peptide in the system
 x, y, a, b, c, d = [], [], [], [], [], []
 
+# opening all files with radius of gyration output for each peptide and plotting on single graph
 thresh = 8
 
 with open("rgyr_s1.txt") as f:
