@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-
+# finds the fraction of contacts that each atom in the peptide dimer are apart of
+# method to find the exact contact points of the peptide 
 x, y = [], []
 
 with open("contacts_test_10A.txt") as f:
@@ -15,40 +16,18 @@ with open("contacts_test_10A.txt") as f:
             x.append(float(cols[0]))
             y.append(float(cols[1]))
 
+# finding the fraction of contacts for each atom
 maxim = max(y)
 change = [1 if x == 0 else x for x in y]
 frac = [float(i / maxim) for i in change]
-"""
-fig = plt.figure()
-plt.style.use('seaborn-whitegrid')
-ax1 = fig.add_subplot(111)
-ax1.set_title("P2 ALA -- P3 ALA")
-ax1.set_xlabel('frame')
-ax1.set_ylabel('frac contacts')
-ax1.plot(x, frac, c='r', linewidth=1, label='the data')
-# for axis in [ax1.yaxis]:
-# axis.set_major_locator(ticker.MaxNLocator(prune='lower', integer=True))
-# plt.xlim(0, 1)
-plt.ylim(0, 1)
-plt.show()
 
-
-T = 298
-k_b = 1.38 * (10 ** (-23))
-r = len(x)
-z = [-k_b * T * np.log(i) for i in frac]
-
-X, Y = np.meshgrid(r, r)
-Z = np.reshape(z, (r, r))
-plt.pcolormesh(x, y, z)
-
-plt.show()
-"""
-
+# using boltzmann equation to find free energy on the z axis of the heatmap
 T = 298
 k_b = 1.38 * (10 ** (-23))
 l = [round(i) for i in x]
 z = [-k_b * T * np.log(i) for i in frac]
+
+# output heatmap
 data = pd.DataFrame(data={'frac contacts': frac, 'time': l, 'F': z})
 data = data.pivot(index='frac contacts', columns='time', values='F')
 print(data)
