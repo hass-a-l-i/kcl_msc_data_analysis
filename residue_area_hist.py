@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from itertools import cycle, islice
 import pandas as pd
 
+# same as residue area line graph but in bar chart instead
 x, y, z = [], [], []
 
 with open("sai_trimer_sasa.xvg") as f:
@@ -26,17 +27,25 @@ p1 = zip(p1_x, p1_y)
 p2 = zip(p2_x, p2_y)
 p3 = zip(p3_x, p3_y)
 
+# downloaded the residue list within NI01
 t = ["A", "A", "F", "M", "K", "L", "I", "Q", "F", "L", "A", "T", "K", "G", "Q", "K", "T", "V", "S", "K", "L", "A", "W",
      "K", "H", "K", "G", "T", "I", "L", "K", "W",
      "I", "N", "A", "G", "Q", "S", "F", "E", "W", "I", "Y", "K", "Q", "I", "K", "K"]
+
+# cycle through the residue list and find corresponding areas below threshold (found using VMD)
+# identifies our minimum area for a residue to be classed as "buried" in peptide
 q = list(zip(t, p2_y))
 w, e = [], []
+
+# made two lists here to test if buried residue was consistent with VMD snapshots
 for item in q:
     if 0 < item[1] < thresh:
         w.append(item)
     if thresh < item[1] < 3:
         e.append(item)
 print(w)
+
+# identify charged and hydrophobic residues within the peptide
 u = []
 for item in w:
     u.append(item[0])
@@ -44,12 +53,13 @@ hydro = ["A", "V", "L", "W", "G", "I", "M", "F"]
 charged = ["K", "E"]
 b = set(u) & set(hydro)
 d = set(u) & set(charged)
-#print("hydrophobic percentage =", len(b) / len(u) * 100)
+print("hydrophobic percentage =", len(b) / len(u) * 100)
 print("residues", b)
-#print("charged percentage =", len(d) / len(u) * 100)
+print("charged percentage =", len(d) / len(u) * 100)
 print("residues", d)
 k = []
 
+# finding all data points above threshold in each peptide to ensure consistency
 e1 = []
 e2 = []
 e3 = []
@@ -62,14 +72,16 @@ for i in p2_y:
 for i in p3_y:
     if i > thresh:
         e3.append(i)
-#for item in p3:
-    #if item[1] < thresh and item[1] > 0.1:
-        #print(item)
+for item in p3:
+    if item[1] < thresh and item[1] > 0.1:
+        print(item)
 
+# our time step values
 l = []
 for i in p1_x:
     l.append(round(i))
 
+# find the effective areas (total - buried) for each peptide to see if consistent
 total = sum(e1) + sum(e2)
 print("tot_eff =", total)
 total2 = sum(p1_y) + sum(p2_y)
@@ -78,14 +90,12 @@ print("tot pep 1 =", sum(e1))
 print("tot pep 2 =", sum(e2))
 print("tot pep 3 =", sum(e3))
 print("av =", (sum(e1)+sum(e2)+sum(e3))/3)
-# l = ["A", "A", "F", "M", "K", "L", "I", "Q", "F", "L", "A", "T", "K", "G", "Q", "K", "V", "S", "L", "A", "W", "K", "H", "K", "G", "T", "I", "L", "K", "W",
-# "I", "N", "A", "G", "Q", "S", "F", "E", "W", "I", "Y", "K", "Q", "I", "K", "K", "L", "W"]
 
+# create data frame and plot
 df = pd.DataFrame({'S1': p1_y,
                    'S2': p2_y,
                    'S3': p3_y}, index=l)
 
-# N3 here too if have
 
 my_colors = list(islice(cycle(['tab:blue', 'tab:red', 'tab:green']), None, len(df)))
 s = l[::3]
