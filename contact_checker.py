@@ -1,10 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-#import sys
 
-#orig_stdout = sys.stdout
-#f = open('og.txt', 'a')
-#sys.stdout = f
+# checks whether two residues can be classed as in contact within system
 with open("hydrop2TRP+p3TRP_at8A.txt") as f:
     x, y = [], []
     for line in f:
@@ -13,6 +10,7 @@ with open("hydrop2TRP+p3TRP_at8A.txt") as f:
         if len(cols) == 2:
             x.append(float(cols[0]))
             y.append(float(cols[1]))
+# number of contact points between atoms within the residues (i.e. with dists below cutoff)
 s = []
 ones = []
 twos = []
@@ -30,28 +28,9 @@ for i in y:
     if i > 3:
         abovethrees.append(i)
 
-#print("frac frames in contact =", (len(s) / len(y)))
-#print("max no. contacts in single frame =", max(s))
-
-#sys.stdout = orig_stdout
-#f.close()
-
-"""
-x, y = [], []
-
-p = ["ALA", "GLY"]
-
-with open("hydrophobic_contacts_p2PHE+p3PHE_10A.txt") as f:
-    for line in f:
-        cols = line.split()
-
-        if len(cols) == 2:
-            x.append(float(cols[0]))
-            y.append(float(cols[1]))
-"""
-
-#print("frac frames in contact =", (len(s) / len(y)))
-#print("max no. contacts in single frame =", max(s))
+# output = various information on contact info for simulation
+print("frac frames in contact =", (len(s) / len(y)))
+print("max no. contacts in single frame =", max(s))
 av = sum(y) / len(y)
 print("av. no contacts OVER TIME=", round(av))
 av2 = sum(s)/len(s)
@@ -69,20 +48,3 @@ print("max no. contacts in single frame =", max(s))
 r = max(y,key=y.count)
 print("most stable no of contacts =", r)
 print("frac frames in contact =", len(s)/len(y))
-
-
-"""
-fig = plt.figure()
-plt.style.use('seaborn-whitegrid')
-ax1 = fig.add_subplot(111)
-ax1.set_title("")
-ax1.set_xlabel('frame')
-ax1.set_ylabel('contacts #')
-l = [i * 0.001 for i in x]
-ax1.plot(l, y, c='r', linewidth=1, label='the data')
-for axis in [ax1.yaxis]:
-    axis.set_major_locator(ticker.MaxNLocator(prune='lower', integer=True))
-# plt.xlim(0, 100000)
-# plt.ylim(99, 120)
-plt.show()
-"""
